@@ -2,284 +2,132 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RANKING AMMO</title>
-    
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RANKING DIÁRIO - AMMO</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
-        /* --- ESTILOS GERAIS --- */
-        :root { 
-            --bg-dark: #0f1016; 
-            --bg-card: rgba(30, 32, 45, 0.6); 
-            --text-main: #ffffff;
-            --text-muted: #8b9bb4;
-            --gold: #ffd700; 
-            --silver: #e0e0e0; 
-            --bronze: #cd7f32; 
-            --green: #00e676; 
-            --red: #ff1744;
-            --blue: #2979ff;
-        }
-
-        * { box-sizing: border-box; }
-
-        body { 
-            background-color: var(--bg-dark); 
-            color: var(--text-main); 
-            font-family: 'Montserrat', sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            height: 100vh; 
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: column; 
-        }
-
-        /* --- HEADER --- */
-        .main-header-title {
-            text-align: center;
-            padding: 10px 0;
-            background: #111219;
-            border-bottom: 1px solid #2a2d3e;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            z-index: 101;
-            flex-shrink: 0;
-        }
+        :root { --bg-dark: #0f1016; --bg-card: #1b1d29; --text-main: #ffffff; --text-muted: #8b9bb4; --gold: #ffd700; --green: #00e676; --blue: #2979ff; --red: #ff1744; }
+        body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Montserrat', sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         
-        .main-header-title h1 {
-            margin: 0;
-            font-size: clamp(1rem, 2.5vh, 2rem); 
-            font-weight: 900;
-            letter-spacing: 2px;
-            color: #fff;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-        }
-
+        .main-header-title { text-align: center; padding: 15px 0; background: #111219; border-bottom: 1px solid #2a2d3e; z-index: 101; }
+        .main-header-title h1 { margin: 0; font-size: 1.8rem; font-weight: 900; letter-spacing: 2px; color: #fff; text-transform: uppercase; }
         .main-header-title h1 span { color: var(--gold); }
+        .sub-header { font-size: 0.8rem; color: var(--green); letter-spacing: 3px; margin-top: 5px; text-transform: uppercase; font-weight: 700; }
 
-        /* --- CARDS DE MÉTRICAS --- */
-        .header-metrics {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            padding: 8px;
-            background: #151720;
-            border-bottom: 1px solid #2a2d3e;
-            z-index: 100;
-            flex-shrink: 0;
+        .header-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 15px; background: #151720; border-bottom: 1px solid #2a2d3e; }
+        .metric-card { background: var(--bg-card); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #2a2d3e; }
+        .metric-card h3 { margin: 0; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .metric-card .value { font-size: 1.3rem; font-weight: 800; margin-top: 5px; }
+
+        .dashboard-container { display: flex; flex: 1; overflow: hidden; padding: 20px; gap: 20px; background: radial-gradient(circle at 50% 50%, #1f2233 0%, #0f1016 80%); }
+        
+        .podium-section { 
+            flex: 1.4; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 30px; position: relative;
+            background: linear-gradient(to bottom, rgba(15, 16, 22, 0.2), rgba(15, 16, 22, 0.9)), 
+                        url('https://static.vecteezy.com/system/resources/previews/007/046/592/original/abstract-technology-futuristic-concept-blue-glowing-neon-lines-on-dark-background-vector.jpg');
+            background-size: cover; background-position: center;
+            border-radius: 20px; box-shadow: 0 0 30px rgba(41, 121, 255, 0.2); border: 1px solid #2979ff;
+        }
+
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
+        .podium-place { display: flex; flex-direction: column; align-items: center; margin: 0 8px; width: 30%; position: relative; animation: float 4s ease-in-out infinite; }
+        .rank-1 { z-index: 10; padding-bottom: 20px; animation-delay: 0s; }
+        .rank-2 { animation-delay: 1.5s; }
+        .rank-3 { animation-delay: 0.8s; }
+        
+        .podium-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 10px; z-index: 2; }
+        
+        .podium-card-body { 
+            background: rgba(20, 25, 40, 0.85); backdrop-filter: blur(8px); padding: 10px; border-radius: 15px; text-align: center; width: 100%; 
+            border-top: 4px solid #333; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
         
-        .metric-card {
-            background: var(--bg-card);
-            border-radius: 8px;
-            padding: 8px 4px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid rgba(255,255,255,0.05);
-            text-align: center;
-        }
+        .p-name { font-weight: 800; font-size: 1rem; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .p-val { font-size: 1.4rem; font-weight: 900; margin: 5px 0; color: var(--gold); } 
+        .p-secundario { font-size: 0.7rem; color: #ccc; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px; margin-top: 5px; }
 
-        .metric-card h3 { margin: 0; font-size: clamp(0.6rem, 1vh, 0.8rem); color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .metric-card .value { font-size: clamp(0.9rem, 2vh, 1.5rem); font-weight: 800; margin-top: 4px; color: #fff; }
+        .rank-1 .podium-img { border-color: var(--gold); width: 140px; height: 140px; box-shadow: 0 0 25px rgba(255, 215, 0, 0.5); }
+        .rank-1 .podium-card-body { border-top-color: var(--gold); background: rgba(40, 30, 10, 0.9); }
+        .rank-2 .podium-img { border-color: #c0c0c0; }
+        .rank-2 .podium-card-body { border-top-color: #c0c0c0; }
+        .rank-3 .podium-img { border-color: #cd7f32; }
+        .rank-3 .podium-card-body { border-top-color: #cd7f32; }
 
-        /* --- DASHBOARD CONTAINER --- */
-        .dashboard-container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-            padding: 15px;
-            gap: 15px;
-            background: radial-gradient(circle at 50% 50%, #1a1d29 0%, #0f1016 80%);
-        }
-
-        /* --- PÓDIO --- */
-        .podium-section {
-            flex: 1.2;
-            border-radius: 20px;
-            display: flex;
-            align-items: flex-end; 
-            justify-content: center;
-            padding-bottom: 10px;
-            position: relative;
-        }
-
-        .podium-title-bg {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            text-align: center;
-            color: #fff;
-            font-weight: 900;
-            opacity: 0.05;
-            font-size: clamp(2rem, 8vw, 6rem);
-            z-index: 0;
-            pointer-events: none;
-            white-space: nowrap;
-        }
-
-        .podium-place {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0 4px;
-            width: 32%;
-            position: relative;
-            z-index: 1;
-            transition: transform 0.3s ease;
-        }
-
-        .podium-img {
-            width: clamp(60px, 10vw, 110px); 
-            height: clamp(60px, 10vw, 110px);
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #333;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.6);
-        }
-
-        .podium-card-body {
-            background: rgba(255, 255, 255, 0.03); 
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            width: 100%;
-            padding: 10px 4px;
-            border-radius: 12px;
-            text-align: center;
-            position: relative;
-            border-top: 3px solid #333;
-            clip-path: polygon(0 0, 100% 0, 100% 92%, 50% 100%, 0 92%); 
-            padding-bottom: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .p-name { font-weight: 800; font-size: clamp(0.75rem, 1.2vw, 1.1rem); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #eee; }
-        .p-val { font-size: clamp(0.9rem, 1.6vw, 1.5rem); font-weight: 800; line-height: 1.1; }
-        
-        .p-hoje { 
-            font-size: clamp(0.65rem, 0.9vw, 0.85rem); 
-            padding: 2px 8px;
-            border-radius: 15px;
-            margin-top: 6px; 
-            font-weight: 700; 
-            display: inline-block;
-            background: rgba(41, 121, 255, 0.1);
-            color: rgba(255,255,255,0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            white-space: nowrap;
-        }
-
-        .rank-1 { order: 2; z-index: 10; margin-bottom: 25px; transform: scale(1.05); }
-        .rank-1 .podium-img { border-color: var(--gold); box-shadow: 0 0 25px rgba(255, 215, 0, 0.3); }
-        .rank-1 .podium-card-body { border-top-color: var(--gold); }
-        .rank-1 .p-val { color: var(--gold); }
-
-        .rank-2 { order: 1; }
-        .rank-2 .podium-img { border-color: var(--silver); }
-        .rank-2 .podium-card-body { border-top-color: var(--silver); }
-
-        .rank-3 { order: 3; }
-        .rank-3 .podium-img { border-color: var(--bronze); }
-        .rank-3 .podium-card-body { border-top-color: var(--bronze); }
-
-        /* --- LISTA LATERAL --- */
-        .list-section {
-            flex: 1;
-            background: rgba(20, 22, 30, 0.5);
-            border-radius: 15px;
-            padding: 8px;
-            overflow-y: auto;
-            border: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .list-row {
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
+        .list-section { flex: 1; background: rgba(21, 23, 32, 0.6); border-radius: 15px; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; border: 1px solid #2a2d3e; }
+        .list-row { display: flex; align-items: center; background: var(--bg-card); padding: 8px 12px; border-radius: 8px; border: 1px solid #2a2d3e; transition: transform 0.2s; }
+        .list-row:hover { transform: translateX(5px); background: #252836; }
         
         .lr-rank { font-size: 1rem; font-weight: 800; color: #555; width: 25px; }
-        .lr-avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; margin-right: 10px; border: 2px solid #333; }
-        .lr-info { flex: 1; overflow: hidden; }
-        .lr-name { font-weight: 700; font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .lr-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px; border: 2px solid #333; }
+        .lr-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .lr-name { font-weight: 700; font-size: 0.85rem; }
         
-        .progress-bar-container { width: 100%; height: 3px; background: #222; border-radius: 2px; margin-top: 4px; overflow: hidden; }
-        .progress-bar { height: 100%; transition: width 0.5s ease; }
-
-        .lr-values { text-align: right; min-width: 90px; }
-        .lr-total { font-weight: 800; color: var(--green); font-size: 1rem; display: block; }
-        .lr-lbl-acumulado { font-size: 0.55rem; color: #666; text-transform: uppercase; }
-
-        /* OVERLAYS */
-        #overlay-start { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 20000; display: flex; align-items: center; justify-content: center; }
-        #btn-start { padding: 20px 40px; font-size: 1.5rem; background: var(--blue); color: #fff; border: none; border-radius: 50px; font-weight: 800; cursor: pointer; }
+        .lr-values { text-align: right; }
+        .lr-total { font-weight: 800; color: var(--green); display: block; font-size: 1.2rem; }
+        .lr-sub { font-size: 0.7rem; color: #777; }
         
-        #overlay-evento { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; flex-direction: column; align-items: center; justify-content: center; animation: fadeIn 0.3s; }
-        .evento-foto { width: 25vh; height: 25vh; border-radius: 50%; border: 6px solid #fff; object-fit: cover; margin-20px; }
-        .evento-titulo { font-size: 5vh; font-weight: 900; color: #fff; text-align: center; }
-        .evento-nome { font-size: 6vh; font-weight: 900; color: var(--gold); }
-        
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .meta-dia-badge { background: #333; color: var(--blue); padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.65rem; display: inline-block; margin-top: 3px; }
 
-        @media (max-width: 768px) {
-            body { overflow-y: auto; height: auto; }
-            .dashboard-container { flex-direction: column; }
-            .header-metrics { grid-template-columns: repeat(3, 1fr); }
-        }
+        #overlay-start, #overlay-evento { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        #overlay-start { background: rgba(0,0,0,0.8); }
+        #overlay-evento { background: rgba(0,0,0,0.95); display: none; flex-direction: column; }
+        #btn-start { padding: 15px 40px; font-size: 1.2rem; background: var(--green); color: #000; border: none; border-radius: 50px; font-weight: 900; cursor: pointer; text-transform: uppercase; box-shadow: 0 0 20px rgba(0,230,118,0.4); }
+        
+        .evento-titulo { font-size: 3rem; font-weight: 900; margin-bottom: 20px; color: var(--green); text-transform: uppercase; letter-spacing: 2px; }
+        .evento-foto { width: 220px; height: 220px; border-radius: 50%; border: 8px solid #fff; object-fit: cover; margin-bottom: 20px; box-shadow: 0 0 50px rgba(255,255,255,0.2); }
+        .evento-nome { font-size: 2.5rem; font-weight: 900; color: #fff; margin-bottom: 10px; }
+        .evento-valor { font-size: 4rem; font-weight: 900; color: var(--gold); text-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
     </style>
 </head>
 <body>
 
-    <div id="overlay-start">
-        <button id="btn-start">INICIAR PAINEL</button>
-    </div>
+    <div id="overlay-start"><button id="btn-start">INICIAR RANKING DIÁRIO</button></div>
 
     <div id="overlay-evento">
-        <div id="ev-titulo" class="evento-titulo">NOVA VENDA!</div>
+        <div class="evento-titulo">NOVA VENDA!</div>
         <img id="ev-foto" class="evento-foto" src="">
         <div id="ev-nome" class="evento-nome">NOME</div>
-        <div id="ev-detalhe" style="font-size:3vh; color:#ccc">Valor</div>
+        <div id="ev-valor" class="evento-valor">R$ 0,00</div>
     </div>
 
     <audio id="som-caixa" src="https://www.myinstants.com/media/sounds/ka-ching.mp3"></audio> 
     <audio id="som-aplausos" src="https://www.myinstants.com/media/sounds/aplausos_2.mp3"></audio>
-    <audio id="som-corrida" src="https://www.myinstants.com/media/sounds/f1-pass-by.mp3"></audio>
-    <audio id="som-vitoria" src="https://www.myinstants.com/media/sounds/ayrton-senna-tema-da-vitoria.mp3"></audio>
 
     <div class="main-header-title">
-        <h1>RANKING DE VENDAS <span>CONSULTORES AMMO</span></h1>
+        <h1>RANKING <span>ÓTICAS AMMO</span></h1>
+        <div class="sub-header">🏆 PERFORMANCE DO DIA (HOJE) 🏆</div>
     </div>
 
     <div class="header-metrics">
-        <div class="metric-card"><h3>Meta Equipe</h3><span class="value" id="meta-geral">...</span></div>
-        <div class="metric-card"><h3>Realizado</h3><span class="value" style="color:var(--green)" id="acumulado-mes">...</span></div>
-        <div class="metric-card"><h3>Dias Úteis</h3><span class="value" style="color:var(--blue)" id="dias-restantes">...</span></div>
-        <div class="metric-card"><h3>Meta/Dia</h3><span class="value" id="meta-ideal-media">...</span></div>
-        <div class="metric-card"><h3>Hoje</h3><span class="value" style="color:var(--green)" id="venda-hoje-total">...</span></div>
+        <div class="metric-card">
+            <h3>Meta Global</h3>
+            <span class="value" id="meta-loja" style="color:var(--text-main)">...</span>
+        </div>
+        <div class="metric-card">
+            <h3>Realizado Mês</h3>
+            <span class="value" id="realizado-loja" style="color:var(--blue)">...</span>
+        </div>
+        <div class="metric-card">
+            <h3>Vendido Hoje</h3>
+            <span class="value" id="venda-hoje" style="color:var(--gold); border-bottom: 2px solid var(--gold)">...</span>
+        </div>
+        <div class="metric-card">
+            <h3>Dias Restantes</h3>
+            <span class="value" id="dias-uteis" style="color:var(--text-muted)">...</span>
+        </div>
     </div>
 
     <div class="dashboard-container">
-        <div class="podium-section" id="podium-container">
-            <h2 class="podium-title-bg">TOP 3 DO DIA</h2>
-        </div>
+        <div class="podium-section" id="podium-container"></div>
         <div class="list-section" id="list-container"></div>
     </div>
 
 <script>
-    var WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxUUb4joN3xigHdvIEEGTae__o06IHHWcEyszdEXJlVjzN2IvM59HSno29rxp7Hab8FAA/exec"; 
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyqiqk5A_QeW0pqDEjW4XkpPoySc5BjM4LYAwuR9yaITOO9vbLsnw2jG_0MiqFoW9c/exec"; 
 
     var equipe = [
         { nome: "ADRIANA VITORELLI", meta: 20000, foto: "https://i.postimg.cc/rwWD44QK/Whats-App-Image-2026-02-12-at-22-40-21.jpg" },
@@ -295,165 +143,193 @@
         { nome: "GABRIELLY", meta: 25000, foto: "https://i.postimg.cc/MZfJzJ5R/Whats-App-Image-2026-02-13-at-11-12-49.jpg" },
         { nome: "SIMONE", meta: 20000, foto: "https://i.postimg.cc/gJqRZTqN/Whats-App-Image-2026-02-13-at-11-17-57.jpg" },
         { nome: "JÉSSICA", meta: 30000, foto: "https://i.postimg.cc/qRMn2Gbz/Whats-App-Image-2026-02-13-at-11-28-48.jpg" },
-        { nome: "GISELI", meta: 20000, foto: "" },
-        { nome: "CAMILA INGRA", meta: 30000, foto: "" },
-        { nome: "NAIR", meta: 20000, foto: "" },
-        { nome: "FERNANDA", meta: 20000, foto: "" },
-        { nome: "ANDERSON", meta: 50000, foto: "" },
-        { nome: "WEVERTON", meta: 50000, foto: "" }
-    ];
+        { nome: "GISELI", meta: 20000, foto: "https://ui-avatars.com/api/?name=V16&background=random" },
+        { nome: "CAMILA INGRA", meta: 30000, foto: "https://ui-avatars.com/api/?name=V17&background=random" },
+        { nome: "NAIR", meta: 20000, foto: "https://ui-avatars.com/api/?name=V18&background=random" },
+        { nome: "FERNANDA", meta: 20000, foto: "https://ui-avatars.com/api/?name=V19&background=random" },
+        { nome: "ANDERSON", meta: 50000, foto: "https://ui-avatars.com/api/?name=V20&background=random" },
+        { nome: "WEVERTON", meta: 50000, foto: "https://ui-avatars.com/api/?name=V21&background=random" }
+    ]; 
 
-    var vendasAnteriores = {}; 
-    var rankingAnterior = []; 
-    var filaAnimacao = []; 
-    var animando = false; 
-    var primeiraCarga = true; 
-    var sistemaIniciado = false;
+    let vendasAnteriores = {};
+    let filaAnimacao = [];
+    let isAnimando = false;
+    let sistemaAtivo = false;
+    let primeiraExecucao = true;
 
-    function normalizarNome(n) { return n ? n.toString().toUpperCase().trim() : ""; }
-    function tratarValor(v) { 
-        if (!v) return 0; 
-        if (typeof v === 'number') return v;
-        return parseFloat(v.toString().replace("R$", "").replace(/\./g, "").replace(",", ".")) || 0; 
-    }
+    function formatMoney(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL', maximumFractionDigits:0}); }
+    function normalizar(t) { return t ? t.toString().toUpperCase().trim() : ""; }
+    function getAvatar(n) { return `https://ui-avatars.com/api/?name=${encodeURIComponent(n)}&background=random&color=fff&size=128`; }
 
-    function calcularDiasUteisRestantes() {
-        var hoje = new Date();
-        var ultimoDia = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0).getDate();
-        var restantes = 0;
-        for (var i = hoje.getDate(); i <= ultimoDia; i++) {
-            var d = new Date(hoje.getFullYear(), hoje.getMonth(), i).getDay();
-            if (d !== 0) restantes++;
+    function calcDiasRestantes() {
+        let hoje = new Date();
+        let ano = hoje.getFullYear();
+        let mes = hoje.getMonth();
+        let ultimoDia = new Date(ano, mes + 1, 0).getDate();
+        let uteis = 0;
+        for(let d = hoje.getDate(); d <= ultimoDia; d++) {
+            let dataCheck = new Date(ano, mes, d);
+            if (dataCheck.getDay() !== 0) uteis++;
         }
-        return restantes || 1;
+        return uteis > 0 ? uteis : 1;
     }
 
-    function adicionarEvento(tipo, nome, foto, detalhe) {
-        filaAnimacao.push({ tipo, nome, foto, detalhe });
+    function dispararEvento(nome, foto, valor) {
+        filaAnimacao.push({nome, foto, valor});
         processarFila();
     }
 
     function processarFila() {
-        if (animando || filaAnimacao.length === 0) return;
-        animando = true;
-        var ev = filaAnimacao.shift();
-        var overlay = document.getElementById('overlay-evento');
-        
-        document.getElementById('ev-foto').src = ev.foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(ev.nome)}&background=random`;
+        if (isAnimando || filaAnimacao.length === 0) return;
+        isAnimando = true;
+        let ev = filaAnimacao.shift();
+        let overlay = document.getElementById('overlay-evento');
         document.getElementById('ev-nome').innerText = ev.nome;
-        document.getElementById('ev-titulo').innerText = ev.tipo === 'venda' ? "NOVA VENDA!" : "ULTRAPASSAGEM!";
-        
+        document.getElementById('ev-valor').innerText = "+" + formatMoney(ev.valor);
+        let img = document.getElementById('ev-foto');
+        img.src = ev.foto;
+        img.onerror = () => img.src = getAvatar(ev.nome);
+        let audio = document.getElementById('som-aplausos');
+        audio.currentTime = 0; audio.play().catch(e=>{});
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         overlay.style.display = 'flex';
-        var som = ev.tipo === 'venda' ? 'som-aplausos' : 'som-corrida';
-        var audio = document.getElementById(som);
-        if(audio) audio.play();
-        if(ev.tipo === 'venda') confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-
         setTimeout(() => {
             overlay.style.display = 'none';
-            animando = false;
+            isAnimando = false;
             processarFila();
-        }, 4000);
+        }, 5000);
     }
 
     function atualizar() {
+        if (!sistemaAtivo) return;
+
         fetch(WEB_APP_URL + "?t=" + new Date().getTime())
         .then(res => res.json())
         .then(dados => {
-            var hojeStr = new Date().toISOString().split('T')[0];
-            var vAcumulado = {};
-            var vHoje = {};
-            var totalHoje = 0;
+            if (!dados || !dados.vendasHoje) return;
 
-            equipe.forEach(c => { vAcumulado[normalizarNome(c.nome)] = 0; vHoje[normalizarNome(c.nome)] = 0; });
+            let vendasMap = {};
+            let hojeMap = {};
+            let totalLoja = 0;
+            let totalHojeLoja = 0;
+            
+            let d = new Date();
+            let hojeStr = d.getFullYear() + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
 
-            if(dados.vendasHoje) {
-                dados.vendasHoje.forEach(v => {
-                    var n = normalizarNome(v[0]);
-                    var val = tratarValor(v[1]);
-                    var dataV = v[2] ? v[2].split('T')[0] : "";
-                    if(vAcumulado.hasOwnProperty(n)) {
-                        vAcumulado[n] += val;
-                        if(dataV === hojeStr) { vHoje[n] += val; totalHoje += val; }
+            equipe.forEach(m => {
+                let key = normalizar(m.nome);
+                vendasMap[key] = 0;
+                hojeMap[key] = 0;
+            });
+
+            dados.vendasHoje.forEach(v => {
+                let nome = normalizar(v[0]);
+                let valor = parseFloat(v[1]) || 0;
+                let dataVenda = v[2]; // Espera-se YYYY-MM-DD
+
+                if (vendasMap[nome] !== undefined) {
+                    vendasMap[nome] += valor;
+                    totalLoja += valor;
+
+                    if (dataVenda === hojeStr) {
+                        hojeMap[nome] += valor;
+                        totalHojeLoja += valor;
+                    }
+                }
+            });
+
+            if (!primeiraExecucao) {
+                equipe.forEach(m => {
+                    let key = normalizar(m.nome);
+                    let novoTotal = vendasMap[key];
+                    let antigoTotal = vendasAnteriores[key] || 0;
+                    if (novoTotal > antigoTotal) {
+                        let diff = novoTotal - antigoTotal;
+                        dispararEvento(m.nome, m.foto, diff);
+                        let cx = document.getElementById('som-caixa');
+                        cx.currentTime=0; cx.play().catch(e=>{});
                     }
                 });
             }
+            
+            equipe.forEach(m => vendasAnteriores[normalizar(m.nome)] = vendasMap[normalizar(m.nome)]);
+            primeiraExecucao = false;
 
-            // Notificações de Venda
-            if(!primeiraCarga) {
-                equipe.forEach(c => {
-                    var n = normalizarNome(c.nome);
-                    if(vAcumulado[n] > (vendasAnteriores[n] || 0)) {
-                        adicionarEvento('venda', c.nome, c.foto, "");
-                    }
-                    vendasAnteriores[n] = vAcumulado[n];
-                });
-            } else {
-                equipe.forEach(c => vendasAnteriores[normalizarNome(c.nome)] = vAcumulado[normalizarNome(c.nome)]);
-            }
+            let diasRestantes = calcDiasRestantes();
+            let metaLojaTotal = equipe.reduce((acc, curr) => acc + curr.meta, 0);
 
-            var r = equipe.map(c => {
-                var n = normalizarNome(c.nome);
-                return { ...c, vendido: vAcumulado[n], hoje: vHoje[n], pct: (vAcumulado[n]/c.meta)*100 };
-            }).sort((a,b) => b.hoje - a.hoje || b.vendido - a.vendido);
+            let ranking = equipe.map(m => {
+                let key = normalizar(m.nome);
+                let vendido = vendasMap[key];
+                let hoje = hojeMap[key];
+                let falta = m.meta - vendido;
+                let metaDia = falta > 0 ? falta / diasRestantes : 0;
+                return { ...m, vendido, hoje, falta, metaDia };
+            });
 
-            render(r, totalHoje, dados.totalMes);
-            primeiraCarga = false;
-        });
+            ranking.sort((a, b) => (b.hoje - a.hoje) || (b.vendido - a.vendido));
+
+            renderizarTela(ranking, metaLojaTotal, totalLoja, totalHojeLoja, diasRestantes);
+
+        }).catch(e => console.error("Erro conexão", e));
     }
 
-    function render(ranking, totalHoje, totalMes) {
-        document.getElementById('venda-hoje-total').innerText = totalHoje.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
-        document.getElementById('acumulado-mes').innerText = tratarValor(totalMes).toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
-        
-        var metaEquipe = equipe.reduce((a,b) => a + b.meta, 0);
-        document.getElementById('meta-geral').innerText = metaEquipe.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
-        
-        var dias = calcularDiasUteisRestantes();
-        document.getElementById('dias-restantes').innerText = dias;
-        document.getElementById('meta-ideal-media').innerText = ((metaEquipe - tratarValor(totalMes))/dias).toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+    function renderizarTela(ranking, metaLoja, realizadoLoja, hojeLoja, diasUteis) {
+        document.getElementById('meta-loja').innerText = formatMoney(metaLoja);
+        document.getElementById('realizado-loja').innerText = formatMoney(realizadoLoja);
+        document.getElementById('venda-hoje').innerText = formatMoney(hojeLoja);
+        document.getElementById('dias-uteis').innerText = diasUteis;
 
-        var pod = document.getElementById('podium-container');
-        pod.innerHTML = '<h2 class="podium-title-bg">TOP 3 DO DIA</h2>';
-        
-        [ranking[1], ranking[0], ranking[2]].forEach((r, i) => {
-            if(!r) return;
-            var rank = i === 0 ? 2 : (i === 1 ? 1 : 3);
-            pod.innerHTML += `
-                <div class="podium-place rank-${rank}">
-                    <img src="${r.foto || 'https://ui-avatars.com/api/?name='+r.nome}" class="podium-img">
-                    <div class="podium-card-body">
-                        <div class="p-name">${r.nome.split(' ')[0]}</div>
-                        <div class="p-val">${r.hoje.toLocaleString('pt-BR', {style:'currency', currency:'BRL'})}</div>
-                        <div class="p-hoje">Mês: ${r.vendido.toLocaleString('pt-BR', {style:'currency', currency:'BRL'})}</div>
-                    </div>
-                </div>`;
-        });
+        let podium = document.getElementById('podium-container');
+        let list = document.getElementById('list-container');
+        podium.innerHTML = "";
+        list.innerHTML = "";
 
-        var list = document.getElementById('list-container');
-        list.innerHTML = '';
-        ranking.slice(3).forEach((r, i) => {
-            list.innerHTML += `
-                <div class="list-row">
-                    <div class="lr-rank">${i+4}</div>
-                    <img src="${r.foto || 'https://ui-avatars.com/api/?name='+r.nome}" class="lr-avatar">
-                    <div class="lr-info">
-                        <div class="lr-name">${r.nome}</div>
-                        <div class="progress-bar-container"><div class="progress-bar" style="width:${Math.min(r.pct, 100)}%; background:var(--blue)"></div></div>
-                    </div>
-                    <div class="lr-values">
-                        <span class="lr-total">${r.hoje.toLocaleString('pt-BR', {style:'currency', currency:'BRL'})}</span>
-                        <span class="lr-lbl-acumulado">Total: ${r.vendido.toLocaleString('pt-BR', {style:'currency', currency:'BRL'})}</span>
-                    </div>
-                </div>`;
-        });
+        if(ranking[1]) renderPodium(ranking[1], 2, podium);
+        if(ranking[0]) renderPodium(ranking[0], 1, podium);
+        if(ranking[2]) renderPodium(ranking[2], 3, podium);
+
+        for(let i = 3; i < ranking.length; i++) {
+            let r = ranking[i];
+            let div = document.createElement('div');
+            div.className = "list-row";
+            div.innerHTML = `
+                <div class="lr-rank">${i+1}</div>
+                <img src="${r.foto}" class="lr-avatar" onerror="this.src='${getAvatar(r.nome)}'">
+                <div class="lr-info">
+                    <div class="lr-name">${r.nome}</div>
+                    <span class="meta-dia-badge">Meta Diária: ${formatMoney(r.metaDia)}</span>
+                </div>
+                <div class="lr-values">
+                    <span class="lr-total" style="color:var(--gold)">HOJE: ${formatMoney(r.hoje)}</span>
+                    <span class="lr-sub">Mês: ${formatMoney(r.vendido)}</span>
+                </div>
+            `;
+            list.appendChild(div);
+        }
     }
 
-    document.getElementById('btn-start').addEventListener('click', function() {
+    function renderPodium(r, pos, container) {
+        if (!r) return;
+        let div = document.createElement('div');
+        div.className = `podium-place rank-${pos}`;
+        div.innerHTML = `
+            <img src="${r.foto}" class="podium-img" onerror="this.src='${getAvatar(r.nome)}'">
+            <div class="podium-card-body">
+                <div class="p-name">${r.nome.split(' ')[0]}</div>
+                <div class="p-val" title="Venda Hoje">${formatMoney(r.hoje)}</div>
+                <div class="p-secundario">MÊS: ${formatMoney(r.vendido)}</div>
+            </div>
+        `;
+        container.appendChild(div);
+    }
+
+    document.getElementById('btn-start').addEventListener('click', () => {
         document.getElementById('overlay-start').style.display = 'none';
-        sistemaIniciado = true;
+        sistemaAtivo = true;
+        ['som-caixa','som-aplausos'].forEach(id=>{ let a=document.getElementById(id); a.volume=0; a.play().then(()=>a.volume=1).catch(()=>{}); });
         atualizar();
-        setInterval(atualizar, 10000);
+        setInterval(atualizar, 20000); // Atualiza a cada 20 segundos
     });
 </script>
 </body>
