@@ -215,8 +215,14 @@
             let totalLoja = 0;
             let totalHojeLoja = 0;
             
+            // Monta os formatos de data para garantir a compatibilidade
             let d = new Date();
-            let hojeStr = d.getFullYear() + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
+            let ano = d.getFullYear();
+            let mes = ("0" + (d.getMonth() + 1)).slice(-2);
+            let dia = ("0" + d.getDate()).slice(-2);
+            
+            let hojeISO = `${ano}-${mes}-${dia}`; // Formato: YYYY-MM-DD
+            let hojeBR = `${dia}/${mes}/${ano}`;   // Formato: DD/MM/YYYY
 
             equipe.forEach(m => {
                 let key = normalizar(m.nome);
@@ -227,13 +233,17 @@
             dados.vendasHoje.forEach(v => {
                 let nome = normalizar(v[0]);
                 let valor = parseFloat(v[1]) || 0;
-                let dataVenda = v[2]; // Espera-se YYYY-MM-DD
+                
+                // Transforma a data do Google Sheets em String
+                let dataVendaStr = String(v[2]); 
 
                 if (vendasMap[nome] !== undefined) {
+                    // 1. Sempre acumula no Mês
                     vendasMap[nome] += valor;
                     totalLoja += valor;
 
-                    if (dataVenda === hojeStr) {
+                    // 2. Verifica se a data da venda CONTÉM a data de hoje
+                    if (dataVendaStr.includes(hojeISO) || dataVendaStr.includes(hojeBR)) {
                         hojeMap[nome] += valor;
                         totalHojeLoja += valor;
                     }
@@ -269,6 +279,7 @@
                 return { ...m, vendido, hoje, falta, metaDia };
             });
 
+            // Ordena primeiro pelas vendas de HOJE, depois pelas vendas do MÊS
             ranking.sort((a, b) => (b.hoje - a.hoje) || (b.vendido - a.vendido));
 
             renderizarTela(ranking, metaLojaTotal, totalLoja, totalHojeLoja, diasRestantes);
